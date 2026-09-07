@@ -1,26 +1,273 @@
 @import "tailwindcss";
 
+/* ============================================================
+   KRIATE DESIGN SYSTEM
+   Tokens from the official brand build guide.
+   ============================================================ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --kriate-orange: #f4511e;
+  --kriate-orange-soft: #ff6a3d;
+  --kriate-black: #111111;
+  --kriate-cream: #f7f3ec;
+  --kriate-white: #ffffff;
+  --kriate-grey: #6b6863;
+
+  --background: var(--kriate-cream);
+  --foreground: var(--kriate-black);
 }
 
 @theme inline {
+  --color-orange: var(--kriate-orange);
+  --color-orange-soft: var(--kriate-orange-soft);
+  --color-ink: var(--kriate-black);
+  --color-cream: var(--kriate-cream);
+  --color-paper: var(--kriate-white);
+  --color-grey: var(--kriate-grey);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --font-sans: var(--font-manrope);
+  --font-display: var(--font-space-grotesk);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-manrope), "Segoe UI", system-ui, sans-serif;
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--kriate-orange);
+  color: var(--kriate-white);
+}
+
+/* Dotted grid texture used on light editorial sections */
+.grid-texture {
+  background-image: radial-gradient(
+    rgba(17, 17, 17, 0.08) 1px,
+    transparent 1px
+  );
+  background-size: 26px 26px;
+}
+
+/* Display headline helper */
+.display {
+  font-family: var(--font-space-grotesk), var(--font-manrope), sans-serif;
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+/* Accessible focus ring */
+:focus-visible {
+  outline: 2px solid var(--kriate-orange);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+/* Scroll-reveal (paired with IntersectionObserver in Reveal.tsx) */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Gentle float for the hero conceptual visual */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+.float-slow {
+  animation: float 7s ease-in-out infinite;
+}
+.float-slower {
+  animation: float 9s ease-in-out infinite;
+}
+
+/* ---- Hero: Spark of Connection ---- */
+@keyframes spark-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.16);
+    opacity: 0.92;
+  }
+}
+@keyframes ripple {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.5;
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.75);
+    opacity: 0;
+  }
+}
+@keyframes reach-left {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(7px);
+  }
+}
+@keyframes reach-right {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-7px);
+  }
+}
+.spark-core {
+  animation: spark-pulse 1.8s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.ripple {
+  animation: ripple 2.8s ease-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.ripple-2 {
+  animation-delay: 0.9s;
+}
+.ripple-3 {
+  animation-delay: 1.8s;
+}
+.reach-l {
+  animation: reach-left 3.6s ease-in-out infinite;
+}
+.reach-r {
+  animation: reach-right 3.6s ease-in-out infinite;
+}
+
+/* ---- Page loader ---- */
+@keyframes loader-bar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes loader-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.85;
+  }
+}
+.loader-bar {
+  animation: loader-bar 1.05s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transform-origin: left center;
+}
+.loader-pulse {
+  animation: loader-pulse 1.5s ease-in-out infinite;
+}
+
+/* Slow rotation for the hero orbital rings (spins in place around each ring's center) */
+@keyframes hv-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.hv-spin {
+  animation: hv-spin 48s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.hv-spin-rev {
+  animation: hv-spin 70s linear infinite reverse;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Marquee for the capabilities ticker */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: marquee 32s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .marquee-track,
+  .float-slow,
+  .float-slower,
+  .hv-spin,
+  .hv-spin-rev,
+  .spark-core,
+  .ripple,
+  .reach-l,
+  .reach-r,
+  .loader-pulse {
+    animation: none;
+  }
+  .loader-bar {
+    animation: none;
+    transform: scaleX(1);
+  }
 }
